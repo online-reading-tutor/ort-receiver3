@@ -4,7 +4,7 @@ class Receiver {
     }
 
     receive(data) {
-        this.agents.forEach(a => a.receive(data));
+        this.agents.forEach(a => a.process(data));
     }
 }
 
