@@ -1,0 +1,15 @@
+{
+  "name": "ort-receiver",
+  "version": "3.0.0",
+  "description": "Receiver module for Online Reading Tutor Dyslexia Assessment",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha specs"
+  },
+  "author": "Stacey Vetzal <stacey@vetzal.com>",
+  "license": "Proprietary",
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  }
+}
