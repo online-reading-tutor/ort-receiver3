@@ -1,13 +1,13 @@
 const pug = require('pug');
 
-class PugTemplateFiller {
+class PugTransformer {
     constructor(template) {
         this.process = pug.compile(template);
     }
 
-    fill(data) {
+    transform(data) {
         return this.process(data);
     }
 }
 
-module.exports = PugTemplateFiller;
+module.exports = PugTransformer;
