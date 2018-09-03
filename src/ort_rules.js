@@ -1,54 +1,25 @@
-// Input keys
-const IK_SUMMARY_MESSAGE = 'summaryMessage';
-const IK_FREE_TRIAL = 'freeTrial';
-const IK_CONTACT_METHOD = 'contactMethod';
-const IK_RESULTS = 'results';
-const IK_SUMMARY_SCORE = 'summaryScore';
-
-// Output keys
-const OK_AT_RISK_FLAG = 'atRiskFlag';
-const OK_FREE_TRIAL_FLAG = 'freeTrialFlag';
-const OK_WILL_CONTACT_METHOD = 'willContactMethod';
-
-const IK_SUMMARIES = 'summaries';
-
 const OrtRules = [
     {
-        condition: (wm) => IK_SUMMARY_SCORE in wm,
-        consequence: (wm) => {
-            wm[IK_SUMMARY_SCORE] = Math.round(wm[IK_SUMMARY_SCORE]);
-        }
+        condition: (wm) => 'summaryScore' in wm,
+        consequence: (wm) => wm.summaryScore = Math.round(wm.summaryScore)
     },
     {
-        condition: (wm) => IK_SUMMARY_MESSAGE in wm,
-        consequence: (wm) => {
-            wm[OK_AT_RISK_FLAG] = wm[IK_SUMMARY_MESSAGE] === 'At Risk';
-        }
+        condition: (wm) => 'summaryMessage' in wm,
+        consequence: (wm) => wm.atRiskFlag = wm.summaryMessage === 'At Risk'
     },
     {
-        condition: (wm) => IK_FREE_TRIAL in wm,
-        consequence: (wm) => {
-            wm[OK_FREE_TRIAL_FLAG] = wm[IK_FREE_TRIAL].toUpperCase() === 'YES';
-        }
+        condition: (wm) => 'freeTrial' in wm,
+        consequence: (wm) => wm.freeTrialFlag = wm.freeTrial.toUpperCase() === 'YES'
     },
     {
-        condition: (wm) => OK_FREE_TRIAL_FLAG in wm && IK_CONTACT_METHOD,
-        consequence: (wm) => {
-            if (wm[IK_CONTACT_METHOD].match(/phone/)) {
-                wm[OK_WILL_CONTACT_METHOD] = 'phone';
-            } else {
-                wm[OK_WILL_CONTACT_METHOD] = 'email';
-            }
-        }
+        condition: (wm) => 'freeTrialFlag' in wm && 'contactMethod' in wm,
+        consequence: (wm) => wm.willContactMethod = wm.contactMethod.match(/phone/) ? 'phone' : 'email'
     },
     {
-        condition: (wm) => IK_RESULTS in wm && IK_SUMMARIES in wm,
+        condition: (wm) => 'results' in wm && 'summaries' in wm,
         consequence: (wm) => {
-            let summaries = wm[IK_SUMMARIES];
-            let results = wm[IK_RESULTS];
-
-            results.forEach((section, i) => {
-                section.message = summaries[i].message;
+            wm.results.forEach((section, i) => {
+                section.message = wm.summaries[i].message;
                 let count = 0;
                 section.responses.forEach(response => {
                     if (response.correct) count++;
@@ -66,26 +37,24 @@ const OrtRules = [
                     }
                 });
                 section.count = count;
-                section.percent = summaries[i].score;
+                section.percent = wm.summaries[i].score;
             });
         }
     },
     {
-        condition: (wm) => IK_RESULTS in wm,
+        condition: (wm) => 'results' in wm,
         consequence: (wm) => {
-            let results = wm[IK_RESULTS];
-            results.forEach((section, i) => {
+            wm.results.forEach((section, i) => {
                 section.elapsedTime = section.responses.reduce((total, r) => total + r.responseTime, 0);
                 section.total = section.responses.length;
-                section.average = Math.round(elapsedTime / section.total);
+                section.average = Math.round(section.elapsedTime / section.total);
             });
         }
     },
     {
-        condition: (wm) => IK_SUMMARIES in wm,
+        condition: (wm) => 'summaries' in wm,
         consequence: (wm) => {
-            let summaries = wm[IK_SUMMARIES];
-            summaries.forEach(summary => {
+            wm.summaries.forEach(summary => {
                 let visual = summary.visual;
                 let auditory = summary.auditory;
                 if (visual + auditory > 0) {

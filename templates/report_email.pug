@@ -1,0 +1,89 @@
+doctype html
+html
+    head
+        meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
+    body
+        h1 Assessment (#{summaryScore}, #{summaryMessage})
+
+        table(width="100%", cellpadding="4")
+            tr
+                td Contact Name:
+                td= contact.contactName
+            tr
+                td Contact Role:
+                td= contact.role
+            tr
+                td Student's Name:
+                td= contact.studentName
+            tr
+                td Grade Level:
+                td= contact.gradeLevel
+            tr
+                td Email:
+                td= contact.email
+            tr
+                td Phone:
+                td= contact.phone
+            tr
+                td Country:
+                td= contact.country
+            tr
+                td Comments:
+                td= contact.comments
+
+        table(width="100%", cellpadding="4")
+            tr
+                td(align="right") Section
+                td(align="center") Accuracy
+                td(align="center") Errors<br>Visual / Auditory
+                td(align="left") Assessment
+            each summary in summaries
+                tr
+                    td(align="right")= summary.name
+                    td(align="center")= summary.score
+                    td(align="center") #{summary.visualScore} / #{summary.auditoryScore}
+                    td(align="left")= summary.message
+
+        each section in results
+            h2 Section: #{section.name} (#{section.message})
+
+            table(width="100%" cellpadding="4")
+                tr
+                    td(align="center") Subject
+                    td(align="center") Response
+                    td(align="center") Type of Error
+                    td(align="center") Processing Speed (milliseconds)
+                each response in section.responses
+                    tr(style=`color: ${response.color}`)
+                        td(align="center")
+                            | #{response.subject.subject}
+                            | (#{response.subject.alternates[0].label}, #{response.subject.alternates[1].label})
+                        td(align="center")= response.answer
+                        td(align="center")= response.correctLabel
+                        td(align="right")= response.responseTime
+                tr
+                    td
+                    td(align="center") #{section.count} / #{section.total}
+                    td(align="center")= section.percent
+                    td(align="right") #{section.average}ms Avg
+
+        h2 Device Information
+        table(width="100%" cellpadding="4")
+            tr
+                th(align="right") Key
+                th(align="left") Value
+            tr
+                td(align="right") version
+                td(align="left")= deviceData.version
+            tr
+                td(align="right") model
+                td(align="left")= deviceData.model
+            tr
+                td(align="right") name
+                td(align="left")= deviceData.name
+            tr
+                td(align="right") platform
+                td(align="left")= deviceData.platform
+            tr
+                td(align="right") cordova
+                td(align="left")= deviceData.cordova

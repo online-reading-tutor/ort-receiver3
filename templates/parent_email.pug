@@ -1,0 +1,97 @@
+doctype html
+html
+    head
+        meta(http-equiv="Content-Type", content="text/html; charset=utf-8")
+    body
+        h1 Online Reading Tutor Assessment Results for #{contact.studentName}
+        h2= summaryMessage
+
+        if atRiskFlag
+            p #{contact.studentName} reads letter patterns with #{summaryScore}% accuracy. Typically, a fluent reader #{contact.studentName}'s age should have a score of #{passingScore}% or higher. Please note: This score is NOT in any way a reflection of how smart #{contact.studentName} is or how hard they try.
+            p It is more likely that their brain simply processes written language differently, making it hard for #{contact.studentName} to learn to read in the same way that other students do.
+            p Online Reading Tutor is specifically designed for students with these types of dyslexic-related reading difficulties and can help #{contact.studentName} improve their reading fluency and comprehension dramatically.
+        else
+            p #{contact.studentName} scored "low risk" on our assessment, and probably does not have a reading disability or dyslexia. However, you are the best judge of their reading. If you feel they struggle, they may be reading delayed. Reading delayed children, who make up 20% of the population, move rapidly through their individualized training and typically achieve grade level reading fluency and comprehension in just a few months.
+
+        h2 Assessment (#{summaryScore}%, #{summaryMessage})
+
+        table(width="100%", cellpadding="4")
+            tr
+                td Contact Name:
+                td= contact.contactName
+            tr
+                td Contact Role:
+                td= contact.role
+            tr
+                td Student's Name:
+                td= contact.studentName
+            tr
+                td Grade Level:
+                td= contact.gradeLevel
+
+        p
+            em In the table below, the section names show the letter patterns using V = vowel and C = consonant.
+
+        table(width="100%", cellpadding="4")
+            tr
+                td(align="right") Section
+                td(align="center") Score
+                td(align="left") Assessment
+            each summary in summaries
+                tr
+                    td(align="right")= summary.name
+                    td(align="center")= summary.score
+                    td(align="left")= summary.message
+
+        p
+            b Regardless of #{contact.studentName}'s score, we can teach them to read.
+
+        p
+            b Listen to what this former student has to say in this 60 second video:
+            a(href="https://youtu.be/YwQTSEUMeZE") https://youtu.be/YwQTSEUMeZE
+
+        p
+            b Hear this mother of a dyslexic child from Maryland:
+            a(href="https://youtu.be/pgytKKD61rQ") https://youtu.be/pgytKKD61rQ
+
+        p For an overview of how we teach reading please view our short video.
+            a(href="https://youtu.be/qvWvGBHgmy4") https://youtu.be/qvWvGBHgmy4
+
+        h1 Contact Us
+
+        p We invite you to review #{contact.studentName}'s test results with an Online Reading Tutor specialist.
+
+        ol
+            li
+                a(href="http://onlinereadingtutor.simplybook.me") Book an appointment
+                | &nbsp;with one of our reading specialists
+            li Send an email to &nbsp;
+                a(href="mailto:info@onlinereadingtutor.com") info@onlinereadingtutor.com
+            li Toll Free 1-888-710-7323, or outside of USA and Canada call free with WhatsApp 1-289-356-5563 or 1-519-816-9472
+
+        p Online Reading Tutor has a proven record of success using Orton-Gillingham based software and convenient video conferencing. During the review you may request a free one week trial of the tutoring software.
+
+        h1 Assessment Response Details
+
+        each section in results
+            h2 Section: #{section.name} (#{section.message})
+
+            table(width="100%" cellpadding="4")
+                tr
+                    td(align="center") Subject
+                    td(align="center") Response
+                    td(align="center") Type of Error
+                    td(align="center") Processing Speed (milliseconds)
+                each response in section.responses
+                    tr(style=`color: ${response.color}`)
+                        td(align="center")
+                            | #{response.subject.subject}
+                            | (#{response.subject.alternates[0].label}, #{response.subject.alternates[1].label})
+                        td(align="center")= response.answer
+                        td(align="center")= response.correctLabel
+                        td(align="right")= response.responseTime
+                tr
+                    td
+                    td(align="center") #{section.count} / #{section.total}
+                    td(align="center")= section.percent
+                    td(align="right") #{section.average}ms Avg
