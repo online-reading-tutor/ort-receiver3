@@ -30,4 +30,22 @@ describe("RuleEngine", () => {
        }).to.throw();
     });
 
+    it("should pass working memory unchanged when no rules", () => {
+        let workingMemory = { data: "thingie" };
+        expect(engine.execute(workingMemory)).to.deep.equal(workingMemory);
+    });
+
+    it("should process a simple rule", () => {
+        let initialValue = "initial";
+        let transformedValue = "transformed";
+        engine.register({
+            condition: (wm) => wm.data === initialValue,
+            consequence: (wm) => wm.data = transformedValue
+        });
+
+        let output = engine.execute({ data: initialValue });
+
+        expect(output.data).to.equal(transformedValue);
+    });
+
 });

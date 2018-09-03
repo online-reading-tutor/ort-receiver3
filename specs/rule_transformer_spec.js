@@ -1,32 +1,28 @@
+const util = require('util');
 const {expect} = require('./spec_helper');
 
 const RuleTransformer = require('../src/rule_transformer');
 
 describe("RuleTransformer", () => {
 
-    var transform, rule;
+    var ruleTransformer, rule;
 
     let initialValue = "initial";
     let transformedValue = "transformed";
 
     beforeEach(() => {
-        transform = new RuleTransformer();
+        ruleTransformer = new RuleTransformer();
         rule = {
-            condition: function(r) {
-                r.when(this && this.random === initialValue);
-            },
-            consequence: function(r) {
-                this.random = transformedValue;
-                r.next();
-            }
+            condition: wm => wm.random === initialValue,
+            consequence: wm => wm.random = transformedValue
         };
     });
 
-    // it("should execute a simple rule", (done) => {
-    //     transform.register(rule);
-    //     let sampleData = {random: initialValue};
-    //     let newData = transform.execute(sampleData);
-    //     expect(newData.random).to.equal(data.random);
-    // });
+    it("should execute a simple rule", () => {
+        ruleTransformer.register(rule);
+        let sampleData = {random: initialValue};
+        let newData = ruleTransformer.transform(sampleData);
+        expect(newData.random).to.equal(transformedValue);
+    });
 
 });

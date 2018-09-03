@@ -9,8 +9,8 @@ class RuleTransformer {
         this.engine.register(rule);
     }
 
-    execute(workingMemory, callback) {
-        this.engine.execute(workingMemory, callback);
+    transform(workingMemory) {
+        return this.engine.execute(workingMemory);
     }
 }
 

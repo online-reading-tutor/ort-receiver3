@@ -26,26 +26,26 @@ describe("Agent", () => {
         expect(output).to.equal(3);
     });
 
-    // describe("Agent, RuleTransformer, PugTransformer", () => {
-    //
-    //     let initialValue = "initial";
-    //     let transformedValue = "transformed";
-    //
-    //     it("should integrate a rule transformer and a pug transformer", () => {
-    //         let ruleTransformer = new RuleTransformer();
-    //         let rule = {
-    //             condition: function (r) {
-    //                 r.when(this && this.message === initialValue);
-    //             },
-    //             consequence: function (r) {
-    //                 this.message = transformedValue;
-    //                 r.next();
-    //             }
-    //         };
-    //         ruleTransformer.register(rule);
-    //
-    //         let pugTransformer = new PugTransformer("doctype html\nhtml= message");
-    //     });
-    // });
+    describe("Agent, RuleTransformer, PugTransformer", () => {
+
+        let initialValue = "initial";
+        let transformedValue = "transformed";
+
+        it("should integrate a rule transformer and a pug transformer", () => {
+            let ruleTransformer = new RuleTransformer();
+            ruleTransformer.register({
+                condition: wm => wm.message === initialValue,
+                consequence: wm => wm.message = transformedValue
+            });
+
+            let pugTransformer = new PugTransformer("doctype html\nhtml= message");
+
+            let agent = new Agent([ruleTransformer, pugTransformer]);
+
+            let output = agent.process({ message: initialValue });
+
+            expect(output).to.equal(`<!DOCTYPE html><html>${transformedValue}</html>`)
+        });
+    });
 
 });
