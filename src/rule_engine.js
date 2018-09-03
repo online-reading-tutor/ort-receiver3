@@ -16,12 +16,14 @@ class RuleEngine {
     execute(workingMemory) {
         let newMemory = this.rules
             .filter(r => r.condition(workingMemory))
-            .reduce((wm, r) => {
-                let wmCopy = Object.assign({}, wm);
-                r.consequence(wmCopy)
-                return wmCopy;
-            }, workingMemory);
+            .reduce(this.runConsequence, workingMemory);
         return newMemory;
+    }
+
+    runConsequence(workingMemory, rule) {
+        let workingMemoryCopy = Object.assign({}, workingMemory);
+        rule.consequence(workingMemoryCopy)
+        return workingMemoryCopy;
     }
 
     ruleCount() {

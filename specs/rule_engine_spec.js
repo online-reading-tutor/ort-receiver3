@@ -1,4 +1,4 @@
-const { expect } = require('./spec_helper');
+const {expect} = require('./spec_helper');
 
 const RuleEngine = require('../src/rule_engine');
 
@@ -16,22 +16,22 @@ describe("RuleEngine", () => {
         expect(engine.ruleCount()).to.equal(1);
     });
 
-    it("should register multiple rules", () => {
-        let rule1 = { condition: (wm) => true };
-        let rule2 = { condition: (wm) => true };
+    it("should register multiple different rules", () => {
+        let rule1 = {};
+        let rule2 = {};
         engine.register([rule1, rule2]);
         expect(engine.ruleCount()).to.equal(2);
     });
 
     it("should not allow registering the same rule twice", () => {
-       let rule = {};
-       expect(() => {
-           engine.register([rule, rule]);
-       }).to.throw();
+        let rule = {};
+        expect(() => {
+            engine.register([rule, rule]);
+        }).to.throw();
     });
 
     it("should pass working memory unchanged when no rules", () => {
-        let workingMemory = { data: "thingie" };
+        let workingMemory = {data: "thingie"};
         expect(engine.execute(workingMemory)).to.deep.equal(workingMemory);
     });
 
@@ -43,9 +43,9 @@ describe("RuleEngine", () => {
             consequence: (wm) => wm.data = transformedValue
         });
 
-        let output = engine.execute({ data: initialValue });
+        let output = engine.execute({data: initialValue});
 
-        expect(output.data).to.equal(transformedValue);
+        expect(output).to.deep.equal({data: transformedValue});
     });
 
 });
