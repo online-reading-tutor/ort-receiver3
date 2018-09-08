@@ -1,4 +1,4 @@
-class TemplateAgent {
+class Pipeline {
     constructor(transformers) {
         this.transformers = transformers;
     }
@@ -8,4 +8,4 @@ class TemplateAgent {
     }
 }
 
-module.exports = TemplateAgent;
+module.exports = Pipeline;

@@ -1,6 +1,6 @@
 const {expect, sinon} = require('./spec_helper');
 
-const Agent = require('../src/agent');
+const Agent = require('../src/pipeline');
 const PugTransformer = require('../src/pug_transformer');
 const RuleTransformer = require('../src/rule_transformer');
 
