@@ -5,8 +5,12 @@ class PugTransformer {
         this.process = pug.compile(template);
     }
 
-    transform(data) {
-        return this.process(data);
+    transform(input) {
+        let html = this.process(input);
+        return {
+            data: input,
+            html: html
+        };
     }
 }
 

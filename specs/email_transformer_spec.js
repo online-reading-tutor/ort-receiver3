@@ -20,10 +20,19 @@ describe("EmailTransformer", () => {
        let recipient = 'Someone Special <someone@domain.com>';
        let sender = "someone@somewhere.com";
        let subject = "Simple Subject";
-       xform.setSender(sender);
-       xform.setSubject(subject);
-       xform.addRecipient(recipient);
-       xform.transform(content);
+
+       let data = {
+           data: {
+               email: {
+                   from: sender,
+                   subject: subject,
+                   recipients: [recipient]
+               }
+           },
+           html: content
+       };
+
+       xform.transform(data);
        expect(fake_gateway.send_email).to.have.been.calledWith({ from: sender, to: [recipient], subject: subject, content: content })
    });
 });

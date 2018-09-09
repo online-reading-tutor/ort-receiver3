@@ -1,15 +1,15 @@
 const {expect, sinon} = require('./spec_helper');
 
-const Agent = require('../src/pipeline');
+const Pipeline = require('../src/pipeline');
 const PugTransformer = require('../src/pug_transformer');
 const RuleTransformer = require('../src/rule_transformer');
 
-describe("Agent", () => {
+describe("Pipeline", () => {
 
     it("should just return the last transformer's output", () => {
         let xform1 = {transform: d => "b"};
         let xform2 = {transform: d => "c"};
-        let agent = new Agent([xform1, xform2]);
+        let agent = new Pipeline([xform1, xform2]);
 
         let output = agent.process("a");
 
@@ -18,7 +18,7 @@ describe("Agent", () => {
 
     it("should pass data between transformers", () => {
         let addition_transformer = {transform: a => a + 1};
-        let agent = new Agent([addition_transformer, addition_transformer]);
+        let agent = new Pipeline([addition_transformer, addition_transformer]);
         let data = 1;
 
         let output = agent.process(data);
@@ -26,7 +26,7 @@ describe("Agent", () => {
         expect(output).to.equal(3);
     });
 
-    describe("Agent, RuleTransformer, PugTransformer", () => {
+    describe("Pipeline, RuleTransformer, PugTransformer", () => {
 
         let initialValue = "initial";
         let transformedValue = "transformed";
@@ -40,11 +40,12 @@ describe("Agent", () => {
 
             let pugTransformer = new PugTransformer("doctype html\nhtml= message");
 
-            let agent = new Agent([ruleTransformer, pugTransformer]);
+            let agent = new Pipeline([ruleTransformer, pugTransformer]);
 
-            let output = agent.process({ message: initialValue });
+            let output = agent.process({message: initialValue});
 
-            expect(output).to.equal(`<!DOCTYPE html><html>${transformedValue}</html>`)
+            let expected_html = `<!DOCTYPE html><html>${transformedValue}</html>`;
+            expect(output).to.deep.equal({data: { message: transformedValue }, html: expected_html})
         });
     });
 

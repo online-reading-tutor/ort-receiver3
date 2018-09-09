@@ -4,30 +4,65 @@ const AwsSesGateway = require('./src/aws_ses_gateway');
 const EmailTransformer = require('./src/email_transformer');
 const PugTransformer = require('./src/pug_transformer');
 const RuleTransformer = require('./src/rule_transformer');
-const ortRules = require('./src/ort_rules');
 const Pipeline = require('./src/pipeline');
 const Receiver = require('./src/receiver');
 
-let rules = new RuleTransformer();
-rules.register(ortRules);
+function createParentPipeline(awsSesGateway, ortRules) {
+    let parentEmailSender = new EmailTransformer(awsSesGateway);
+    let parentRules = new RuleTransformer();
+    parentRules.register(ortRules);
+    parentRules.register(
+        {
+            condition: wm => 'contact' in wm && 'studentName' in wm.contact,
+            consequence: wm => {
+                wm.email = {
+                    subject: `Online Reading Tutor Assessment for ${wm.contact.studentName}`,
+                    // from: 'Online Reading Tutor <app@onlinereadingtutor.com>',
+                    from: 'Online Reading Tutor <stacey@vetzal.com>',
+                    recipients: [
+                        // `${wm.contact.contactName} <${wm.contact.email}>`,
+                        `${wm.contact.contactName} co Stacey Vetzal <stacey@vetzal.com>`
+                    ]
+                };
+            }
+        }
+    );
+    let parentContentTransformer = new PugTransformer(fs.readFileSync('./templates/parent_email.pug', 'utf8'));
+    let parentPipeline = new Pipeline([parentRules, parentContentTransformer, parentEmailSender]);
+    return parentPipeline;
+}
+
+function createReportPipeline(awsSesGateway, ortRules) {
+    let adminRules = new RuleTransformer();
+    adminRules.register(ortRules);
+    adminRules.register(
+        {
+            condition: wm => 'contact' in wm && 'studentName' in wm.contact,
+            consequence: wm => {
+                wm.email = {
+                    subject: `Online Reading Tutor Assessment for ${wm.contact.studentName}`,
+                    // from: 'Online Reading Tutor <app@onlinereadingtutor.com>',
+                    from: 'Online Reading Tutor <stacey@vetzal.com>',
+                    recipients: [
+                        // `${wm.contact.contactName} <${wm.contact.email}>`,
+                        `ORT co Stacey Vetzal <stacey@vetzal.com>`
+                    ]
+                };
+            }
+        }
+    );
+    let reportEmailSender = new EmailTransformer(awsSesGateway);
+    let reportEmailTransformer = new PugTransformer(fs.readFileSync('./templates/report_email.pug', 'utf8'));
+    let reportPipeline = new Pipeline([adminRules, reportEmailTransformer, reportEmailSender]);
+    return reportPipeline;
+}
+
+const ortRules = require('./src/ort_rules');
 
 let awsSesGateway = new AwsSesGateway();
-
-let parentEmailSender = new EmailTransformer(awsSesGateway);
-parentEmailSender.setSubject("Parent Subject Line");
-parentEmailSender.setSender('stacey@vetzal.com');
-parentEmailSender.addRecipient('stacey@vetzal.com');
-let parentContentTransformer = new PugTransformer(fs.readFileSync('./templates/parent_email.pug', 'utf8'));
-let parentPipeline = new Pipeline([rules, parentContentTransformer, parentEmailSender]);
-
-let reportEmailSender = new EmailTransformer(awsSesGateway);
-reportEmailSender.setSubject("Report Subject Line");
-reportEmailSender.setSender('stacey@vetzal.com');
-reportEmailSender.addRecipient('stacey@vetzal.com');
-let reportEmailTransformer = new PugTransformer(fs.readFileSync('./templates/report_email.pug', 'utf8'));
-let reportPipeline = new Pipeline([rules, reportEmailTransformer, reportEmailSender]);
-
-let receiver = new Receiver([parentPipeline, reportPipeline]);
+let parentPipeline = createParentPipeline(awsSesGateway, ortRules);
+// let reportPipeline = createReportPipeline(awsSesGateway, ortRules);
+let receiver = new Receiver([parentPipeline]);//, reportPipeline]);
 
 let data = JSON.parse(fs.readFileSync('./sample_data/sample.json'));
 receiver.receive(data);

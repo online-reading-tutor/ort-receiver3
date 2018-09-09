@@ -5,26 +5,14 @@ class EmailTransformer {
         this.gateway = emailGateway;
     }
 
-    addRecipient(email) {
-        this.to.push(email);
-    }
-
-    setSender(email) {
-        this.sender = email;
-    }
-
-    setSubject(content) {
-        this.subject = content;
-    }
-
-    transform(data) {
-        if (this.to.length === 0) throw("No recipients");
+    transform(input) {
+        if (input.data.email.recipients.length === 0) throw("No recipients");
 
         this.gateway.send_email({
-            from: this.sender,
-            to: this.to,
-            subject: this.subject,
-            content: data
+            from: input.data.email.from,
+            to: input.data.email.recipients,
+            subject: input.data.email.subject,
+            content: input.html
         });
     }
 }

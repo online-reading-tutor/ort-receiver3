@@ -3,8 +3,8 @@ class Pipeline {
         this.transformers = transformers;
     }
 
-    process(data) {
-        return this.transformers.reduce((out, f) => f.transform(out), data);
+    process(input) {
+        return this.transformers.reduce((out, f) => f.transform(out), input);
     }
 }
 

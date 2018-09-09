@@ -3,8 +3,8 @@ class Receiver {
         this.agents = agentList;
     }
 
-    receive(data) {
-        this.agents.forEach(a => a.process(data));
+    receive(input) {
+        this.agents.forEach(a => a.process(input));
     }
 }
 

@@ -27,7 +27,8 @@ class AwsSesGateway {
             Destinations: details.to,
             RawMessage: { Data: msg.toString() }
         }).promise()
-            .then(data => console.log(util.inspect(data)));
+            .then(data => console.log(util.inspect(data)))
+            .catch(err => console.trace(err));
     }
 }
 
