@@ -9,11 +9,21 @@ class EmailTransformer {
         this.to.push(email);
     }
 
+    setSender(email) {
+        this.sender = email;
+    }
+
+    setSubject(content) {
+        this.subject = content;
+    }
+
     transform(data) {
-        if (this.to.length == 0) throw("No recipients");
+        if (this.to.length === 0) throw("No recipients");
 
         this.gateway.send_email({
+            from: this.sender,
             to: this.to,
+            subject: this.subject,
             content: data
         });
     }

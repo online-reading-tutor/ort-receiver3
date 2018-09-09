@@ -16,10 +16,14 @@ describe("EmailTransformer", () => {
         expect(() => xform.transform(content)).to.throw();
     });
 
-   it("should send recipients and content to the gateway", () => {
-       let email = 'Someone Special <someone@domain.com>';
-       xform.addRecipient(email);
+   it("should send sender, recipients and content to the gateway", () => {
+       let recipient = 'Someone Special <someone@domain.com>';
+       let sender = "someone@somewhere.com";
+       let subject = "Simple Subject";
+       xform.setSender(sender);
+       xform.setSubject(subject);
+       xform.addRecipient(recipient);
        xform.transform(content);
-       expect(fake_gateway.send_email).to.have.been.calledWith({ to: [email], content: content })
+       expect(fake_gateway.send_email).to.have.been.calledWith({ from: sender, to: [recipient], subject: subject, content: content })
    });
 });
