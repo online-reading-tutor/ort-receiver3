@@ -1,4 +1,5 @@
 const fs = require('fs');
+
 const AwsSesGateway = require('./src/aws_ses_gateway');
 const EmailTransformer = require('./src/email_transformer');
 const PugTransformer = require('./src/pug_transformer');
@@ -58,18 +59,10 @@ function createReportPipeline(awsSesGateway, ortRules) {
 
 const ortRules = require('./src/ort_rules');
 
-exports.handler = async (event) => {
+let awsSesGateway = new AwsSesGateway();
+let parentPipeline = createParentPipeline(awsSesGateway, ortRules);
+// let reportPipeline = createReportPipeline(awsSesGateway, ortRules);
+let receiver = new Receiver([parentPipeline]);//, reportPipeline]);
 
-    let awsSesGateway = new AwsSesGateway();
-    let parentPipeline = createParentPipeline(awsSesGateway, ortRules);
-    let reportPipeline = createReportPipeline(awsSesGateway, ortRules);
-    let receiver = new Receiver([parentPipeline, reportPipeline]);
-
-    receiver.receive(event);
-
-    return {
-        statusCode: 200,
-        body: "OK"
-    }
-
-};
+let data = JSON.parse(fs.readFileSync('./sample_data/sample.json'));
+receiver.receive(data);

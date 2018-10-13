@@ -8,7 +8,6 @@ class AwsSesGateway {
         AWS.config.update(config)
     }
 
-    // { from: sender, to: [recipient], content: content }
     send_email(details) {
 
         let htmlEntity = mimemessage.factory({

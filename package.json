@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.311.0",
+    "maxim-engine": "^0.9.0",
     "mimemessage": "^1.0.5",
     "pug": "^2.0.3"
   }

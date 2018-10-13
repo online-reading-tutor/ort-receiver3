@@ -1,8 +1,8 @@
-const RuleEngine = require('./rule_engine');
+const { MaximEngine } = require('maxim-engine');
 
 class RuleTransformer {
     constructor() {
-        this.engine = new RuleEngine();
+        this.engine = new MaximEngine();
     }
 
     register(rule) {
