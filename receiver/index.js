@@ -65,7 +65,9 @@ exports.handler = async (event) => {
     let reportPipeline = createReportPipeline(awsSesGateway, ortRules);
     let receiver = new Receiver([parentPipeline, reportPipeline]);
 
-    receiver.receive(event.body);
+    let data = JSON.parse(event.body);
+
+    receiver.receive(data);
 
     return {
         statusCode: 200,
