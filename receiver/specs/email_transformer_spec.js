@@ -16,7 +16,7 @@ describe("EmailTransformer", () => {
         expect(() => xform.transform(content)).to.throw();
     });
 
-   it("should send sender, recipients and content to the gateway", () => {
+    it("should send sender, recipients and content to the gateway", () => {
        let recipient = 'Someone Special <someone@domain.com>';
        let sender = "someone@somewhere.com";
        let subject = "Simple Subject";

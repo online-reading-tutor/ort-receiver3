@@ -58,7 +58,9 @@ function createReportPipeline(awsSesGateway, ortRules) {
 
 const ortRules = require('./src/ort_rules');
 
-exports.handler = async (event) => {
+exports.handler = (event) => {
+
+    console.log("Starting receiver lambda");
 
     let awsSesGateway = new AwsSesGateway();
     let parentPipeline = createParentPipeline(awsSesGateway, ortRules);
@@ -69,9 +71,10 @@ exports.handler = async (event) => {
 
     receiver.receive(data);
 
+    console.log("Completing receiver lambda");
+
     return {
         statusCode: 200,
         body: "OK"
     }
-
 };

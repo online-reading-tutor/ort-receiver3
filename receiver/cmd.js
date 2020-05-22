@@ -59,10 +59,14 @@ function createReportPipeline(awsSesGateway, ortRules) {
 
 const ortRules = require('./src/ort_rules');
 
-let awsSesGateway = new AwsSesGateway();
-let parentPipeline = createParentPipeline(awsSesGateway, ortRules);
+const main = async () => {
+    let awsSesGateway = new AwsSesGateway();
+    let parentPipeline = createParentPipeline(awsSesGateway, ortRules);
 // let reportPipeline = createReportPipeline(awsSesGateway, ortRules);
-let receiver = new Receiver([parentPipeline]);//, reportPipeline]);
+    let receiver = new Receiver([parentPipeline]);//, reportPipeline]);
 
-let data = JSON.parse(fs.readFileSync('./sample_data/sample.json'));
-receiver.receive(data);
+    let data = JSON.parse(fs.readFileSync('./sample_data/sample.json'));
+    receiver.receive(data);
+};
+main();
+

@@ -8,7 +8,7 @@ class AwsSesGateway {
         AWS.config.update(config)
     }
 
-    send_email(details) {
+    async send_email(details) {
 
         let htmlEntity = mimemessage.factory({
             contentType: 'text/html;charset=utf-8',
@@ -21,7 +21,9 @@ class AwsSesGateway {
         });
         msg.header('Subject', details.subject);
 
-        new AWS.SES().sendRawEmail({
+        console.log(`Sending email from ${details.from} to ${details.to}`);
+
+        await new AWS.SES().sendRawEmail({
             Source: details.from,
             Destinations: details.to,
             RawMessage: { Data: msg.toString() }
