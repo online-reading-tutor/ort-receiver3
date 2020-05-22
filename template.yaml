@@ -20,6 +20,13 @@ Resources:
           Properties:
             Path: /submit
             Method: post
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - "ses:SendEmail"
+                - "ses:SendRawEmail"
+              Resource: "*"
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
