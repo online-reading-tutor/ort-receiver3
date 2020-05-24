@@ -3,8 +3,10 @@ class Receiver {
         this.agents = agentList;
     }
 
-    receive(input) {
-        this.agents.forEach(a => a.process(input));
+    async receive(input) {
+        for (let a of this.agents) {
+            await a.process(input);
+        }
     }
 }
 

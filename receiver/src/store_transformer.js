@@ -3,10 +3,10 @@ class StoreTransformer {
     this.awsS3Gateway = awsS3Gateway;
   }
 
-  transform(input) {
+  async transform(input) {
     if (!input.filename) throw("No filename");
 
-    this.awsS3Gateway.save_data(input.filename, input);
+    await this.awsS3Gateway.save_data(input.filename, input);
   }
 }
 

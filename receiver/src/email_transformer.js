@@ -5,10 +5,10 @@ class EmailTransformer {
         this.gateway = emailGateway;
     }
 
-    transform(input) {
+    async transform(input) {
         if (input.data.email.recipients.length === 0) throw("No recipients");
 
-        this.gateway.send_email({
+        await this.gateway.send_email({
             from: input.data.email.from,
             to: input.data.email.recipients,
             subject: input.data.email.subject,

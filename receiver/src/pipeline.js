@@ -3,8 +3,11 @@ class Pipeline {
         this.transformers = transformers;
     }
 
-    process(input) {
-        return this.transformers.reduce((out, f) => f.transform(out), input);
+    async process(input) {
+        let result = input;
+        for (let f of this.transformers) {
+            result = await f.transform(result);
+        }
     }
 }
 

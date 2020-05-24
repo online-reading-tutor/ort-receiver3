@@ -77,7 +77,7 @@ function createStorePipeline(awsS3Gateway) {
 
 const ortRules = require('./src/ort_rules');
 
-exports.handler = (event) => {
+exports.handler = async (event) => {
 
     console.log("Starting receiver lambda");
 
@@ -89,7 +89,7 @@ exports.handler = (event) => {
 
     let data = JSON.parse(event.body);
 
-    receiver.receive(data);
+    await receiver.receive(data);
 
     console.log("Completing receiver lambda");
 

@@ -66,7 +66,7 @@ const main = async () => {
     let receiver = new Receiver([parentPipeline]);//, reportPipeline]);
 
     let data = JSON.parse(fs.readFileSync('./sample_data/sample.json'));
-    receiver.receive(data);
+    await receiver.receive(data);
 };
 main();
 

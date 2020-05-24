@@ -9,7 +9,7 @@ class RuleTransformer {
         this.engine.register(rule);
     }
 
-    transform(input) {
+    async transform(input) {
         return this.engine.execute(input);
     }
 }

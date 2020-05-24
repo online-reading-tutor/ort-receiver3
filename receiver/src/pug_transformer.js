@@ -5,7 +5,7 @@ class PugTransformer {
         this.process = pug.compile(template);
     }
 
-    transform(input) {
+    async transform(input) {
         let html = this.process(input);
         return {
             data: input,
