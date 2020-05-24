@@ -20,6 +20,9 @@ Resources:
           Properties:
             Path: /submit
             Method: post
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref StorageBucket
       Policies:
         - Statement:
             - Effect: Allow
@@ -27,6 +30,18 @@ Resources:
                 - "ses:SendEmail"
                 - "ses:SendRawEmail"
               Resource: "*"
+        - Statement:
+            - Effect: Allow
+              Action:
+                - "s3:PutObject"
+              Resource:
+                - !Join
+                  - ""
+                  - - "arn:aws:s3:::"
+                    - !Ref StorageBucket
+                    - "/*"
+  StorageBucket:
+    Type: AWS::S3::Bucket
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -41,3 +56,6 @@ Outputs:
   ReceiverFunctionIamRole:
     Description: "Implicit IAM Role created for Receiver function"
     Value: !GetAtt ReceiverFunctionRole.Arn
+  Storage:
+    Description: "Storage bucket for assessment data"
+    Value: !Ref StorageBucket

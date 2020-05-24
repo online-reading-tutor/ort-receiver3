@@ -1,6 +1,8 @@
 const fs = require('fs');
 const AwsSesGateway = require('./src/aws_ses_gateway');
+const AwsS3Gateway = require('./src/aws_s3_gateway');
 const EmailTransformer = require('./src/email_transformer');
+const StoreTransformer = require('./src/store_transformer');
 const PugTransformer = require('./src/pug_transformer');
 const RuleTransformer = require('./src/rule_transformer');
 const Pipeline = require('./src/pipeline');
@@ -56,6 +58,23 @@ function createReportPipeline(awsSesGateway, ortRules) {
     return reportPipeline;
 }
 
+function createStorePipeline(awsS3Gateway) {
+    let filenameCreation = new RuleTransformer();
+    filenameCreation.register(
+      {
+          condition: wm => 'contact' in wm && 'studentName' in wm.contact,
+          consequence: wm => {
+              let prefix = new Date().toJSON().replace(/:/g, '-').replace(/^(.+)T(.+)\.\d+\w+$/, "$1-$2");
+              let suffix = wm.contact.studentName.toLowerCase().replace(/\W/g, '');
+              wm.filename = `${prefix}-${suffix}.json`;
+          }
+      }
+    )
+    let storeToS3 = new StoreTransformer(awsS3Gateway);
+    let storePipeline = new Pipeline([filenameCreation,storeToS3]);
+    return storePipeline;
+}
+
 const ortRules = require('./src/ort_rules');
 
 exports.handler = (event) => {
@@ -65,7 +84,8 @@ exports.handler = (event) => {
     let awsSesGateway = new AwsSesGateway();
     let parentPipeline = createParentPipeline(awsSesGateway, ortRules);
     let reportPipeline = createReportPipeline(awsSesGateway, ortRules);
-    let receiver = new Receiver([parentPipeline, reportPipeline]);
+    let storePipeline = createStorePipeline(new AwsS3Gateway(process.env.BUCKET_NAME));
+    let receiver = new Receiver([storePipeline, parentPipeline, reportPipeline]);
 
     let data = JSON.parse(event.body);
 
