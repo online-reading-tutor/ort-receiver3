@@ -2,6 +2,16 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Receiver for Online Reading Tutor assessment apps
 
+Parameters:
+  SmtpHost:
+    Type: String
+  SmtpPort:
+    Type: Number
+  SmtpUsername:
+    Type: String
+  SmtpPassword:
+    Type: String
+
 Globals:
   Function:
     Timeout: 30
@@ -22,6 +32,10 @@ Resources:
       Environment:
         Variables:
           BUCKET_NAME: !Ref StorageBucket
+          SMTP_HOST: !Ref SmtpHost
+          SMTP_PORT: !Ref SmtpPort
+          SMTP_USERNAME: !Ref SmtpUsername
+          SMTP_PASSWORD: !Ref SmtpPassword
       Policies:
         - Statement:
             - Effect: Allow

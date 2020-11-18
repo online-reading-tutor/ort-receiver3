@@ -1,5 +1,6 @@
+import {MailjetGateway} from "./src/mailjet_gateway";
+
 const fs = require('fs');
-const AwsSesGateway = require('./src/aws_ses_gateway');
 const AwsS3Gateway = require('./src/aws_s3_gateway');
 const EmailTransformer = require('./src/email_transformer');
 const StoreTransformer = require('./src/store_transformer');
@@ -81,7 +82,12 @@ exports.handler = async (event) => {
 
     console.log("Starting receiver lambda");
 
-    let awsSesGateway = new AwsSesGateway();
+    let awsSesGateway = new MailjetGateway({
+        host: process.env.SMTP_HOST,
+        port: process.env.SMTP_PORT,
+        username: process.env.SMTP_USERNAME,
+        password: process.env.SMTP_PASSWORD,
+    });
     let parentPipeline = createParentPipeline(awsSesGateway, ortRules);
     let reportPipeline = createReportPipeline(awsSesGateway, ortRules);
     let storePipeline = createStorePipeline(new AwsS3Gateway(process.env.BUCKET_NAME));

@@ -3,9 +3,8 @@ version = 0.1
 [default.deploy]
 [default.deploy.parameters]
 stack_name = "ort-receiver"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-5l2trmobvvg3"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-88ekrhe09ssj"
 s3_prefix = "ort-receiver"
 region = "us-east-1"
 confirm_changeset = true
 capabilities = "CAPABILITY_IAM"
-
