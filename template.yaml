@@ -2,21 +2,20 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Receiver for Online Reading Tutor assessment apps
 
-# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
 Globals:
   Function:
     Timeout: 30
 
 Resources:
   ReceiverFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: receiver/
       Handler: index.handler
       Runtime: nodejs12.x
       Events:
         Submit:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /submit
             Method: post
@@ -34,19 +33,11 @@ Resources:
             - Effect: Allow
               Action:
                 - "s3:PutObject"
-              Resource:
-                - !Join
-                  - ""
-                  - - "arn:aws:s3:::"
-                    - !Ref StorageBucket
-                    - "/*"
+              Resource: !Sub "arn:aws:s3:::${StorageBucket}/*"
   StorageBucket:
     Type: AWS::S3::Bucket
 
 Outputs:
-  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
-  # Find out more about other implicit resources you can reference within SAM
-  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   ReceiverApi:
     Description: "API Gateway endpoint URL for receiver"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
