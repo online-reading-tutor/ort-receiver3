@@ -1,5 +1,5 @@
-// import {MailjetGateway} from "./src/mailjet_gateway";
-import AwsSesGateway from "./src/aws_ses_gateway";
+// const AwsSesGateway = require("./src/mailjet_gateway");
+const AwsSesGateway = require("./src/aws_ses_gateway");
 
 const fs = require('fs');
 const AwsS3Gateway = require('./src/aws_s3_gateway');
