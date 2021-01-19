@@ -1,3 +1,5 @@
+const mimemessage = require('mimemessage')
+
 module.exports = class EmailGateway {
     create_email_content(details) {
         let htmlEntity = mimemessage.factory({
