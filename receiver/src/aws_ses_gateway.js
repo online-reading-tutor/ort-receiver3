@@ -1,4 +1,4 @@
-import {EmailGateway} from "./email_gateway";
+const EmailGateway = require("./email_gateway");
 
 const util = require('util');
 const AWS = require('aws-sdk');

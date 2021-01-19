@@ -1,4 +1,4 @@
-export class EmailGateway {
+module.exports = class EmailGateway {
     create_email_content(details) {
         let htmlEntity = mimemessage.factory({
             contentType: 'text/html;charset=utf-8',
