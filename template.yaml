@@ -27,7 +27,7 @@ Resources:
         Submit:
           Type: Api
           Properties:
-            Path: /submit
+            Path: /receiver/index.php
             Method: post
       Environment:
         Variables:
