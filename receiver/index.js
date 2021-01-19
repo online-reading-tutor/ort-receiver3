@@ -1,4 +1,5 @@
-import {MailjetGateway} from "./src/mailjet_gateway";
+// import {MailjetGateway} from "./src/mailjet_gateway";
+import AwsSesGateway from "./src/aws_ses_gateway";
 
 const fs = require('fs');
 const AwsS3Gateway = require('./src/aws_s3_gateway');
@@ -62,17 +63,17 @@ function createReportPipeline(awsSesGateway, ortRules) {
 function createStorePipeline(awsS3Gateway) {
     let filenameCreation = new RuleTransformer();
     filenameCreation.register(
-      {
-          condition: wm => 'contact' in wm && 'studentName' in wm.contact,
-          consequence: wm => {
-              let prefix = new Date().toJSON().replace(/:/g, '-').replace(/^(.+)T(.+)\.\d+\w+$/, "$1-$2");
-              let suffix = wm.contact.studentName.toLowerCase().replace(/\W/g, '');
-              wm.filename = `${prefix}-${suffix}.json`;
-          }
-      }
+        {
+            condition: wm => 'contact' in wm && 'studentName' in wm.contact,
+            consequence: wm => {
+                let prefix = new Date().toJSON().replace(/:/g, '-').replace(/^(.+)T(.+)\.\d+\w+$/, "$1-$2");
+                let suffix = wm.contact.studentName.toLowerCase().replace(/\W/g, '');
+                wm.filename = `${prefix}-${suffix}.json`;
+            }
+        }
     )
     let storeToS3 = new StoreTransformer(awsS3Gateway);
-    let storePipeline = new Pipeline([filenameCreation,storeToS3]);
+    let storePipeline = new Pipeline([filenameCreation, storeToS3]);
     return storePipeline;
 }
 
@@ -82,12 +83,13 @@ exports.handler = async (event) => {
 
     console.log("Starting receiver lambda");
 
-    let awsSesGateway = new MailjetGateway({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        username: process.env.SMTP_USERNAME,
-        password: process.env.SMTP_PASSWORD,
-    });
+    // let awsSesGateway = new MailjetGateway({
+    //     host: process.env.SMTP_HOST,
+    //     port: process.env.SMTP_PORT,
+    //     username: process.env.SMTP_USERNAME,
+    //     password: process.env.SMTP_PASSWORD,
+    // });
+    let awsSesGateway = new AwsSesGateway();
     let parentPipeline = createParentPipeline(awsSesGateway, ortRules);
     let reportPipeline = createReportPipeline(awsSesGateway, ortRules);
     let storePipeline = createStorePipeline(new AwsS3Gateway(process.env.BUCKET_NAME));
