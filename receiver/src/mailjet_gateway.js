@@ -1,5 +1,5 @@
-import {EmailGateway} from "./email_gateway";
-import {SMTPClient} from 'smtp-client';
+const EmailGateway = require("./email_gateway");
+const {SMTPClient} = require("smtp-client");
 
 export class MailjetGateway extends EmailGateway {
 
