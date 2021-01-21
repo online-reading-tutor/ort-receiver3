@@ -12,7 +12,6 @@ const Receiver = require('./src/receiver');
 
 const ORT_EMAIL=`Online Reading Tutor <app@onlinereadingtutor.com>`;
 const STACEY_EMAIL=`Stacey Vetzal <stacey@vetzal.com>`;
-const BCC_STACEY_EMAIL=`Blind co Stacey Vetzal <svetzal@gmail.com>`;
 
 function createParentPipeline(awsSesGateway, ortRules) {
     let parentEmailSender = new EmailTransformer(awsSesGateway);
@@ -28,8 +27,8 @@ function createParentPipeline(awsSesGateway, ortRules) {
                     to: [
                         `${wm.contact.contactName} <${wm.contact.email}>`,
                     ],
-                    bcc: [ BCC_STACEY_EMAIL ],
-                    cc: [ STACEY_EMAIL ],
+                    bcc: [ STACEY_EMAIL ],
+                    cc: [ ORT_EMAIL ],
                 };
             }
         }
@@ -50,11 +49,9 @@ function createReportPipeline(awsSesGateway, ortRules) {
                     subject: `Online Reading Tutor Assessment for ${wm.contact.studentName}`,
                     from: ORT_EMAIL,
                     to: [
-                        STACEY_EMAIL,
-                        // ORT_EMAIL,
+                        ORT_EMAIL,
                     ],
-                    bcc: [ BCC_STACEY_EMAIL ],
-                    cc: [ STACEY_EMAIL ],
+                    bcc: [ STACEY_EMAIL ],
                 };
             }
         }
