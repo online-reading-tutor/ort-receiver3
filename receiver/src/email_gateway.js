@@ -13,15 +13,14 @@ module.exports = class EmailGateway {
         });
         msg.header('Subject', details.subject);
 
-        if ("to" in details)
-            for (let to of details.to)
-                msg.header('TO', to);
+        for (let to of details.to)
+            msg.header('TO', to);
 
-        if ("bcc" in details)
+        if ("bcc" in details && details.bcc)
             for (let bcc of details.bcc)
                 msg.header('BCC', bcc);
 
-        if ("cc" in details)
+        if ("cc" in details && details.cc)
             for (let cc of details.cc)
                 msg.header('CC', cc);
 
