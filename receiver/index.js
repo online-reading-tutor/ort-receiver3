@@ -10,6 +10,10 @@ const RuleTransformer = require('./src/rule_transformer');
 const Pipeline = require('./src/pipeline');
 const Receiver = require('./src/receiver');
 
+const ORT_EMAIL=`Online Reading Tutor <app@onlinereadingtutor.com>`;
+const STACEY_EMAIL=`Stacey Vetzal <stacey@vetzal.com>`;
+const BCC_STACEY_EMAIL=`Blind co Stacey Vetzal <svetzal@gmail.com>`;
+
 function createParentPipeline(awsSesGateway, ortRules) {
     let parentEmailSender = new EmailTransformer(awsSesGateway);
     let parentRules = new RuleTransformer();
@@ -20,12 +24,12 @@ function createParentPipeline(awsSesGateway, ortRules) {
             consequence: wm => {
                 wm.email = {
                     subject: `Online Reading Tutor Assessment for ${wm.contact.studentName}`,
-                    // from: 'Online Reading Tutor <app@onlinereadingtutor.com>',
-                    from: 'Online Reading Tutor <stacey@vetzal.com>',
-                    recipients: [
-                        // `${wm.contact.contactName} <${wm.contact.email}>`,
-                        `${wm.contact.contactName} co Stacey Vetzal <stacey@vetzal.com>`
-                    ]
+                    from: ORT_EMAIL,
+                    to: [
+                        `${wm.contact.contactName} <${wm.contact.email}>`,
+                    ],
+                    bcc: [ BCC_STACEY_EMAIL ],
+                    cc: [ STACEY_EMAIL ],
                 };
             }
         }
@@ -44,12 +48,13 @@ function createReportPipeline(awsSesGateway, ortRules) {
             consequence: wm => {
                 wm.email = {
                     subject: `Online Reading Tutor Assessment for ${wm.contact.studentName}`,
-                    // from: 'Online Reading Tutor <app@onlinereadingtutor.com>',
-                    from: 'Online Reading Tutor <stacey@vetzal.com>',
-                    recipients: [
-                        // `${wm.contact.contactName} <${wm.contact.email}>`,
-                        `ORT co Stacey Vetzal <stacey@vetzal.com>`
-                    ]
+                    from: ORT_EMAIL,
+                    to: [
+                        STACEY_EMAIL,
+                        // ORT_EMAIL,
+                    ],
+                    bcc: [ BCC_STACEY_EMAIL ],
+                    cc: [ STACEY_EMAIL ],
                 };
             }
         }

@@ -6,22 +6,22 @@ const RuleTransformer = require('../src/rule_transformer');
 
 describe("Pipeline", () => {
 
-    it("should just return the last transformer's output", () => {
+    it("should just return the last transformer's output", async () => {
         let xform1 = {transform: d => "b"};
         let xform2 = {transform: d => "c"};
         let agent = new Pipeline([xform1, xform2]);
 
-        let output = agent.process("a");
+        let output = await agent.process("a");
 
         expect(output).to.equal("c");
     });
 
-    it("should pass data between transformers", () => {
+    it("should pass data between transformers", async () => {
         let addition_transformer = {transform: a => a + 1};
         let agent = new Pipeline([addition_transformer, addition_transformer]);
         let data = 1;
 
-        let output = agent.process(data);
+        let output = await agent.process(data);
 
         expect(output).to.equal(3);
     });
@@ -31,7 +31,7 @@ describe("Pipeline", () => {
         let initialValue = "initial";
         let transformedValue = "transformed";
 
-        it("should integrate a rule transformer and a pug transformer", () => {
+        it("should integrate a rule transformer and a pug transformer", async () => {
             let ruleTransformer = new RuleTransformer();
             ruleTransformer.register({
                 condition: wm => wm.message === initialValue,
@@ -42,7 +42,7 @@ describe("Pipeline", () => {
 
             let agent = new Pipeline([ruleTransformer, pugTransformer]);
 
-            let output = agent.process({message: initialValue});
+            let output = await agent.process({message: initialValue});
 
             let expected_html = `<!DOCTYPE html><html>${transformedValue}</html>`;
             expect(output).to.deep.equal({data: { message: transformedValue }, html: expected_html})

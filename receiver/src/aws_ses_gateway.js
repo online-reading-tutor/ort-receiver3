@@ -13,7 +13,7 @@ class AwsSesGateway extends EmailGateway {
     async send_smtp(details, msg) {
         await new AWS.SES().sendRawEmail({
             Source: details.from,
-            Destinations: details.to,
+            // Destinations: details.to, // Force SES to use mail headers for recipients / CC / BCC
             RawMessage: {Data: msg.toString()}
         }).promise()
             .then(data => console.log(util.inspect(data)))

@@ -8,6 +8,7 @@ class Pipeline {
         for (let f of this.transformers) {
             result = await f.transform(result);
         }
+        return result;
     }
 }
 

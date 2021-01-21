@@ -13,10 +13,10 @@ describe("EmailTransformer", () => {
     });
 
     it("should throw exception when no recipients", () => {
-        expect(() => xform.transform(content)).to.throw();
+        expect(xform.transform(content)).to.be.rejected;
     });
 
-    it("should send sender, recipients and content to the gateway", () => {
+    it("should send sender, recipients and content to the gateway", async () => {
        let recipient = 'Someone Special <someone@domain.com>';
        let sender = "someone@somewhere.com";
        let subject = "Simple Subject";
@@ -26,13 +26,13 @@ describe("EmailTransformer", () => {
                email: {
                    from: sender,
                    subject: subject,
-                   recipients: [recipient]
+                   to: [recipient]
                }
            },
            html: content
        };
 
-       xform.transform(data);
-       expect(fake_gateway.send_email).to.have.been.calledWith({ from: sender, to: [recipient], subject: subject, content: content })
+       await xform.transform(data);
+       expect(fake_gateway.send_email).to.have.been.calledWith({ from: sender, to: [recipient], cc: undefined, bcc: undefined, subject: subject, content: content })
    });
 });

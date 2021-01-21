@@ -12,12 +12,25 @@ module.exports = class EmailGateway {
             body: [htmlEntity]
         });
         msg.header('Subject', details.subject);
+
+        if ("to" in details)
+            for (let to of details.to)
+                msg.header('TO', to);
+
+        if ("bcc" in details)
+            for (let bcc of details.bcc)
+                msg.header('BCC', bcc);
+
+        if ("cc" in details)
+            for (let cc of details.cc)
+                msg.header('CC', cc);
+
         return msg;
     }
 
     async send_email(details) {
         let msg = this.create_email_content(details);
-        console.log(`Sending email from ${details.from} to ${details.to}`);
+        console.log(`Sending email from ${details.from} to ${details.to} cc ${details.cc} bcc ${details.bcc}\n\n${msg.toString()}\n`);
         await this.send_smtp(details, msg);
     }
 

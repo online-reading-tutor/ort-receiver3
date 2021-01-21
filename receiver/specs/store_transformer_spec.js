@@ -19,7 +19,7 @@ describe("StoreTransformer", () => {
 
   it("should throw exception when no filename", () => {
     content.filename = null;
-    expect(() => xform.transform(content)).to.throw();
+    expect(xform.transform(content)).to.eventually.be.rejected;
   });
 
   it("should send data to the S3 gateway", () => {

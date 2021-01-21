@@ -18,10 +18,10 @@ describe("RuleTransformer", () => {
         };
     });
 
-    it("should execute a simple rule", () => {
+    it("should execute a simple rule", async () => {
         ruleTransformer.register(rule);
         let sampleData = {random: initialValue};
-        let newData = ruleTransformer.transform(sampleData);
+        let newData = await ruleTransformer.transform(sampleData);
         expect(newData.random).to.equal(transformedValue);
     });
 
