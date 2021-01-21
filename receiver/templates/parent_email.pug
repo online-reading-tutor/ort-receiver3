@@ -40,7 +40,7 @@ html
             each summary in summaries
                 tr
                     td(align="right")= summary.name
-                    td(align="center")= summary.score
+                    td(align="center") #{summary.score}%
                     td(align="left")= summary.message
 
         p
@@ -89,7 +89,7 @@ html
                             | (#{response.subject.alternates[0].label}, #{response.subject.alternates[1].label})
                         td(align="center")= response.answer
                         td(align="center")= response.correctLabel
-                        td(align="right")= response.responseTime
+                        td(align="right") #{response.responseTime}ms
                 tr
                     td
                     td(align="center") #{section.count} / #{section.total}

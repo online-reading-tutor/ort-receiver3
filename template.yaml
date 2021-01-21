@@ -17,7 +17,7 @@ Globals:
     Timeout: 30
 
 Resources:
-  ReceiverFunction:
+  ReceiverPostFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: receiver/
@@ -32,10 +32,10 @@ Resources:
       Environment:
         Variables:
           BUCKET_NAME: !Ref StorageBucket
-#          SMTP_HOST: !Ref SmtpHost
-#          SMTP_PORT: !Ref SmtpPort
-#          SMTP_USERNAME: !Ref SmtpUsername
-#          SMTP_PASSWORD: !Ref SmtpPassword
+      #          SMTP_HOST: !Ref SmtpHost
+      #          SMTP_PORT: !Ref SmtpPort
+      #          SMTP_USERNAME: !Ref SmtpUsername
+      #          SMTP_PASSWORD: !Ref SmtpPassword
       Policies:
         - Statement:
             - Effect: Allow
@@ -48,6 +48,39 @@ Resources:
               Action:
                 - "s3:PutObject"
               Resource: !Sub "arn:aws:s3:::${StorageBucket}/*"
+
+  ReceiverPutFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: receiver/
+      Handler: index.handler
+      Runtime: nodejs12.x
+      Events:
+        Submit:
+          Type: Api
+          Properties:
+            Path: /receiver/index.php
+            Method: put
+      Environment:
+        Variables:
+          BUCKET_NAME: !Ref StorageBucket
+      #          SMTP_HOST: !Ref SmtpHost
+      #          SMTP_PORT: !Ref SmtpPort
+      #          SMTP_USERNAME: !Ref SmtpUsername
+      #          SMTP_PASSWORD: !Ref SmtpPassword
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - "ses:SendEmail"
+                - "ses:SendRawEmail"
+              Resource: "*"
+        - Statement:
+            - Effect: Allow
+              Action:
+                - "s3:PutObject"
+              Resource: !Sub "arn:aws:s3:::${StorageBucket}/*"
+
   StorageBucket:
     Type: AWS::S3::Bucket
 
@@ -55,12 +88,15 @@ Outputs:
   ReceiverApi:
     Description: "API Gateway endpoint URL for receiver"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
-  ReceiverFunction:
-    Description: "Receiver Lambda Function ARN"
-    Value: !GetAtt ReceiverFunction.Arn
-  ReceiverFunctionIamRole:
-    Description: "Implicit IAM Role created for Receiver function"
-    Value: !GetAtt ReceiverFunctionRole.Arn
+#  ReceiverPostFunction:
+#    Description: "Receiver POST Lambda Function ARN"
+#    Value: !GetAtt ReceiverPostFunction.Arn
+#  ReceiverPutFunction:
+#    Description: "Receiver PUT Lambda Function ARN"
+#    Value: !GetAtt ReceiverPutFunction.Arn
+#  ReceiverFunctionIamRole:
+#    Description: "Implicit IAM Role created for Receiver function"
+#    Value: !GetAtt ReceiverFunctionRole.Arn
   Storage:
     Description: "Storage bucket for assessment data"
     Value: !Ref StorageBucket
