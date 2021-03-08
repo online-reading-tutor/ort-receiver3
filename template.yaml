@@ -2,6 +2,11 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Receiver for Online Reading Tutor assessment apps
 
+# The commented-out parameter sets are if you needed to use an external
+# SMTP relay for sending email. I do not recommend this. Amazon SES works
+# very well, and is more secure, as it is configured by this cloadformation
+# template using least-privilege principles.
+#
 #Parameters:
 #  SmtpHost:
 #    Type: String
@@ -88,15 +93,6 @@ Outputs:
   ReceiverApi:
     Description: "API Gateway endpoint URL for receiver"
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/prod/"
-#  ReceiverPostFunction:
-#    Description: "Receiver POST Lambda Function ARN"
-#    Value: !GetAtt ReceiverPostFunction.Arn
-#  ReceiverPutFunction:
-#    Description: "Receiver PUT Lambda Function ARN"
-#    Value: !GetAtt ReceiverPutFunction.Arn
-#  ReceiverFunctionIamRole:
-#    Description: "Implicit IAM Role created for Receiver function"
-#    Value: !GetAtt ReceiverFunctionRole.Arn
   Storage:
     Description: "Storage bucket for assessment data"
     Value: !Ref StorageBucket
